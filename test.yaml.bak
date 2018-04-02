@@ -1,0 +1,6 @@
+---
+- hosts: node
+  remote_user: root
+  tasks:
+    - service: name=nginx state=started
+      sudo: yes

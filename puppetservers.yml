@@ -1,0 +1,5 @@
+---
+# puppetservers playbook
+- hosts: puppetserver
+  roles:
+    - puppetserver

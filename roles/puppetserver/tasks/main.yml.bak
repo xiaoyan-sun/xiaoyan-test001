@@ -1,0 +1,62 @@
+---
+# file: roles/puppetserver/taks/main.yml
+- debug: msg="get the facts info from node"{{ansible_hostname}}
+  tags: cache_facts
+
+- name: be sure puppetserver pkg is installed
+  yum: pkg=puppetserver state=installed
+  tags: puppetserver
+
+- name: be sure inotify-tools is installed
+  yum: pkg=inotify-tools state=installed
+  tags: puppetserver
+
+- name: be sure unison pkg is installed
+  yum: pkg=unison227 state=installed
+  tags: puppetserver
+
+- name: config the puppetserver
+  template: src=puppet.conf.j2 dest=/etc/puppetlabs/puppet/puppet.conf
+  tags: puppetserver
+
+- name: upload the site.pp file
+  template: src=site.pp.j2 dest=/etc/puppetlabs/code/environments/{{puppet_environment}}/manifests/site.pp
+  tags: 
+    - install
+
+# 修改sysconfig的java参数
+- name: config the java params
+  shell: sed -i 's/^JAVA_ARGS=.*/JAVA_ARGS="-Xms2g -Xmx2g -XX:MaxPermSize=256m"/g' /etc/sysconfig/puppetserver
+  tags: puppetserver
+
+- name: config the service start timeout 
+  shell: sed -i 's/^TimeoutStartSec=.*/TimeoutStartSec=300/g' /usr/lib/systemd/system/puppetserver.service
+  tags: puppetserver
+
+- name: cp modules
+  unarchive: src=modules.tar.gz dest=/etc/puppetlabs/code/modules
+  tags: 
+    - puppetserver
+    - install
+
+- name: transport intoify file
+  template: src=inotify.sh.j2 mode=755 dest=/etc/puppetlabs/puppet/inotify.sh
+  tags: puppetserver
+
+- name: cp watch_dog.sh
+  copy: src=watch_dog.sh mode=755 dest=/etc/puppetlabs/puppet/
+  tags: puppetserver
+
+#- cron:
+#  name: "check the inotify process"
+#  minute: "*/10"
+#  user: root
+#  reboot: yes
+#  job: "sh /etc/puppetlabs/puppet/watch_dog.sh"
+
+#- name: execute the watch_dog.sh to start inotify.sh
+#  shell: sh /etc/puppetlabs/puppet/watch_dog.sh
+
+#- name: start the service
+#  service: name=puppetserver state=started enabled=yes
+#  tags: puppetserver

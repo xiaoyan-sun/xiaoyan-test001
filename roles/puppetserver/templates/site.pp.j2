@@ -1,0 +1,7 @@
+# site.pp文件
+{% for host in groups['puppetdb'] %}
+node {{hostvars[host]['ansible_hostname']}} {
+  class{'::puppetdb':}
+}
+{% endfor %}
+

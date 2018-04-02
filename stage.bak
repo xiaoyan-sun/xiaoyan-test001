@@ -1,0 +1,3 @@
+[puppetserver]
+server1 ansible_ssh_port=22 ansible_ssh_host=192.168.198.130
+server2 ansible_ssh_port=22 ansible_ssh_host=192.168.198.131

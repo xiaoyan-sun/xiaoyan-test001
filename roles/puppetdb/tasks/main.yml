@@ -1,0 +1,33 @@
+---
+- debug: msg="get the facts info from node"{{ansible_hostname}}
+  tags: cache_facts
+
+- name: install puppetdb pkg
+  yum: pkg=puppetdb state=installed
+  tags: 
+    - puppetdb
+    - install
+
+- name: install puppetdb-termini pkg
+  yum: pkg=puppetdb-termini state=installed
+  tags:
+    - puppetdb
+    - install
+
+- name: config the ssl of puppetdb
+  shell: /opt/puppetlabs/bin/puppetdb ssl-setup
+  tags:
+    - puppetdb
+    - install
+
+- name: config the java_args of puppetdb
+  shell: sed -i 's/^JAVA_ARGS=.*/JAVA_ARGS="-Xms512m -Xmx512m -XX:MaxPermSize=128m"/g' /etc/sysconfig/puppetdb
+  tags:
+    - puppetdb
+    - install
+
+- name: install puppetdb by the puppet-agent
+  script: install_puppetdb.sh
+  tags:
+    - puppetdb
+    - install

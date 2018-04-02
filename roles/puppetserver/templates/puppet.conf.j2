@@ -1,0 +1,34 @@
+# This file can be used to override the default puppet settings.
+# See the following links for more details on what settings are available:
+# - https://docs.puppetlabs.com/puppet/latest/reference/config_important_settings.html
+# - https://docs.puppetlabs.com/puppet/latest/reference/config_about_settings.html
+# - https://docs.puppetlabs.com/puppet/latest/reference/config_file_main.html
+# - https://docs.puppetlabs.com/references/latest/configuration.html
+[master]
+vardir = /opt/puppetlabs/server/data/puppetserver
+logdir = /var/log/puppetlabs/puppetserver
+rundir = /var/run/puppetlabs/puppetserver
+pidfile = /var/run/puppetlabs/puppetserver/puppetserver.pid
+codedir = /etc/puppetlabs/code
+basemodulepath = /etc/puppetlabs/code/modules:/etc/puppetlabs/code/environment/production/modules
+storeconfigs = false
+storeconfigs_backend = puppetdb
+#reports = store,puppetdb
+autosign = true
+#node_terminus = exec
+#external_nodes = /etc/puppetlabs/enc.rb
+environment = {{ puppet_environment }}
+http_read_timeout = 360
+certname={{ server_certname }}
+
+[main]
+environment = production
+
+[agent]
+server = {{ server_certname }}
+certificate_revocation = false
+noop = false
+environment = {{ puppet_environment }}
+report = true
+runinterval = 1695
+http_read_timeout = 360

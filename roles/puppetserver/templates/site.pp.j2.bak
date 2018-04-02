@@ -1,0 +1,24 @@
+# site.pp文件
+{% for host in groups['puppetdb'] %}
+node {{hostvars[host]['ansible_nodename']}} {
+  class{'::puppetdb':}
+}
+{% endfor %}
+
+{% for host in groups['activemq'] %}
+node {{hostvars[host]['ansible_nodename']}} {
+  class{'::mcollective::activemq':
+    ks_passwd => 'mco_hf',
+    mc_passwd => 'mco_hf',
+  }
+}
+{% endfor %}
+
+node {{mco_client_certname}} {
+  class {'::mcollective::puppet':}
+  
+  class {'::mcollective::client':
+     mqs => [{"passwd" => "mco_hf", "host"=>{{amq_server_domain_name}}}]
+  }
+
+}

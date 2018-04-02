@@ -1,0 +1,5 @@
+---
+# dbserver playbook
+- hosts: puppetdb
+  roles:
+    - puppetdb

@@ -1,0 +1,9 @@
+#!/bin/bash
+ip2={{unison_syc_dest_server_ip}}
+src2="/etc/puppetlabs/puppet/ssl"
+dst2="/etc/puppetlabs/puppet/ssl"
+/usr/bin/inotifywait -mrq -e create,delete,modify,move $src2 | while read line;do
+/usr/bin/unison -batch -owner  $src2 ssh://$ip2/$dst2
+echo -n "$line " >> /var/log/inotify.log
+echo `date | cut -d " " -f1-4` >> /var/log/inotify.log
+done

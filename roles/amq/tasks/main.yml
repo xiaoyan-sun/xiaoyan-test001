@@ -1,0 +1,9 @@
+---
+- debug: msg="get the facts info from node"{{ansible_hostname}}
+  tags: cache_facts
+
+- name: install activemq by the puppet-agent
+  script: install_activemq.sh
+  tags:
+    - amq
+    - install

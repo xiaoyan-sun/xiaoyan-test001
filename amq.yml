@@ -1,0 +1,5 @@
+---
+# amq playbook
+- hosts: activemq
+  roles:
+    - amq

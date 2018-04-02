@@ -1,0 +1,5 @@
+---
+server_certname: 'server.puppet.yylm'  #puppet server的域名
+puppet_environment: 'production'  #环境目录名
+mco_client_certname: 'server01.certname'   #这里配置想要设置为mco-cli的server的certname
+amq_server_domain_name: 'amq1.qdn.hf' #这里配置activemq服务器的域名
