@@ -4,6 +4,20 @@
 对用的play文件分别为.puppetservers.yml, amq.yml, dbservers.yml
 清单文件为production和stage两个文件，对应测试和生产环境（可以按需调整）
 
+## 首先修改ansible配置开启facts缓存
+修改/etc/ansible/ansible.cfg,修改一下配置：
+ansible.cfg:
+gathering = smart
+fact_caching = jsonfile
+fact_caching_connection = /etc/ansible/cache
+fact_caching_timeout = 86400
+
+修改好配置后，执行获取facts信息
+```
+ansible -i stage|production -m setup 或者：
+ansible-playbook -i stage|production site.yaml --tags cache_facts
+```
+
 ## 部署结构图
 该playbook的部署结构为，单数据中心有两台puppetserver做多活集群，两台activemq做mq集群，两台puppetdb做集群，共六台服务器,具体请见puppet的应用部署架构
 		
